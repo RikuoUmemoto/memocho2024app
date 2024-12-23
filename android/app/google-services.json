@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "97476365758",
+    "project_id": "memocho-b895b",
+    "storage_bucket": "memocho-b895b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:97476365758:android:33c6972d0ad41068d37def",
+        "android_client_info": {
+          "package_name": "com.example.memochou"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCIlh4t-8aAx6nFGtcjjkoMMdSfcq6TEqA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

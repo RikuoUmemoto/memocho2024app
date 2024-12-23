@@ -1,0 +1,59 @@
+apply plugin: 'com.google.gms.google-services'
+
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
+    id "dev.flutter.flutter-gradle-plugin"
+
+    // Firebase プラグイン
+    id "com.google.gms.google-services" // apply false はルートレベルで使い、ここでプラグインを適用
+}
+
+android {
+    namespace = "com.example.memochou"
+    compileSdk = flutter.compileSdkVersion
+    ndkVersion = flutter.ndkVersion
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
+
+    defaultConfig {
+        // アプリケーションIDやその他の設定
+        applicationId = "com.example.memochou"
+        minSdk = flutter.minSdkVersion
+        targetSdk = flutter.targetSdkVersion
+        versionCode = flutter.versionCode
+        versionName = flutter.versionName
+    }
+
+    buildTypes {
+        release {
+            signingConfig = signingConfigs.debug // 必要に応じて署名設定を変更
+        }
+    }
+}
+
+dependencies {
+    // Firebase BoMを使用してバージョン管理
+    implementation platform("com.google.firebase:firebase-bom:33.7.0")
+
+    // Firebase Analyticsライブラリ
+    implementation "com.google.firebase:firebase-analytics"
+
+    // Firestoreライブラリ
+    implementation "com.google.firebase:firebase-firestore"
+
+    // 必要な他のFirebase SDKがあればここに追加
+    implementation "com.google.firebase:firebase-auth" // Firebase認証
+}
+
+flutter {
+    source = "../.."
+}

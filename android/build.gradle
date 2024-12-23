@@ -1,0 +1,30 @@
+allprojects {
+    repositories {
+        google()         // Firebase関連のライブラリが含まれるGoogleのリポジトリ
+        mavenCentral()   // 一部のFirebase依存ライブラリがここから取得されます
+    }
+}
+
+rootProject.buildDir = "../build"
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+
+subprojects {
+    project.evaluationDependsOn(":app")
+}
+
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
+}
+
+// Firebaseを利用するためのGoogleサービスプラグインを追加
+plugins {
+    // Google servicesプラグインを追加
+    id("com.google.gms.google-services") version "4.4.2" apply false
+}
+
+dependencies {
+    // Google Services Gradle プラグインを追加
+    classpath 'com.google.gms:google-services:4.4.2'
+}
