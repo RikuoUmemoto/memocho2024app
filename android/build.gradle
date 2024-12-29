@@ -1,4 +1,3 @@
-// buildscript を最初に配置
 buildscript {
     repositories {
         google()  // Firebase関連のライブラリが含まれるGoogleのリポジトリ
@@ -7,14 +6,13 @@ buildscript {
     dependencies {
         // FirebaseのGoogleサービスプラグイン
         classpath 'com.google.gms:google-services:4.4.2'
-        // Kotlinプラグインはここで追加しない
     }
 }
 
 // plugins をその後に配置
 plugins {
     id "com.android.application" version "8.1.0"
-    id "dev.flutter.flutter-gradle-plugin"  // Flutterのプラグインは最後に配置
+    id "dev.flutter.flutter-gradle-plugin"  
     id "com.google.gms.google-services" // Firebase プラグインの適用
 }
 
@@ -22,7 +20,7 @@ plugins {
 allprojects {
     repositories {
         google()         // Firebase関連のライブラリが含まれるGoogleのリポジトリ
-        mavenCentral()   // 他の依存ライブラリ
+        mavenCentral()   
     }
 }
 

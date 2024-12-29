@@ -89,10 +89,12 @@ class FirebaseManager {
     final User? user = FirebaseAuth.instance.currentUser;
 
     if (user != null) {
-      await _usersCollection.doc(user.uid).collection('notes').doc(id).update({
-        'title': title,
-        'content': content,
-      });
+      await _usersCollection.doc(user.uid).collection('notes').doc(id).update(
+        {
+          'title': title,
+          'content': content,
+        },
+      );
     } else {
       throw Exception('User not logged in');
     }
