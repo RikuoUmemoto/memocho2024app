@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
       title: 'メモ帳',
       theme: ThemeData(primarySwatch: Colors.blue),
       home: HomeScreen(), // ホーム画面
+      debugShowCheckedModeBanner: false, // Debugタグを非表示にする
     );
   }
 }
