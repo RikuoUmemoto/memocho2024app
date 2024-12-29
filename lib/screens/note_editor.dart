@@ -59,9 +59,11 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
       return;
     }
 
-    setState(() {
-      _isLoading = true;
-    });
+    setState(
+      () {
+        _isLoading = true;
+      },
+    );
 
     try {
       if (widget.noteId == null) {
@@ -75,9 +77,11 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
         SnackBar(content: Text('Failed to save note: $e')),
       );
     } finally {
-      setState(() {
-        _isLoading = false;
-      });
+      setState(
+        () {
+          _isLoading = false;
+        },
+      );
     }
   }
 

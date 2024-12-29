@@ -18,11 +18,13 @@ class FirebaseManager {
 
   // メモのリアルタイムデータを取得する
   Stream<List<Note>> getNotesStream() {
-    return _notesCollection.snapshots().map((snapshot) {
-      return snapshot.docs
-          .map((doc) => Note.fromMap(doc.data() as Map<String, dynamic>))
-          .toList();
-    });
+    return _notesCollection.snapshots().map(
+      (snapshot) {
+        return snapshot.docs
+            .map((doc) => Note.fromMap(doc.data() as Map<String, dynamic>))
+            .toList();
+      },
+    );
   }
 
   // メモを取得
@@ -45,10 +47,12 @@ class FirebaseManager {
 
   // メモを更新
   Future<void> updateNote(String id, String title, String content) async {
-    await _notesCollection.doc(id).update({
-      'title': title,
-      'content': content,
-    });
+    await _notesCollection.doc(id).update(
+      {
+        'title': title,
+        'content': content,
+      },
+    );
   }
 
   // メモを削除
