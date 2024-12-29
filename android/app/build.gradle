@@ -2,12 +2,12 @@ plugins {
     id "com.android.application"
     id "kotlin-android"
     id "com.google.gms.google-services" // Firebase プラグインの適用
-    id "dev.flutter.flutter-gradle-plugin" // このプラグインは最後に置く
+    id "dev.flutter.flutter-gradle-plugin" // このプラグインは最後に置くらしい
 }
 
 android {
     namespace = "com.example.memochou"
-    compileSdkVersion 33  // flutter.compileSdkVersion の代わりに実際のバージョンを記述
+    compileSdkVersion 33 
 
     ndkVersion = flutter.ndkVersion
 
@@ -22,16 +22,16 @@ android {
 
     defaultConfig {
         applicationId = "com.example.memochou"
-        // authentication を利用するにはminSDKのバージョンは23以上が必要のため、23に明記
+        // authentication を利用するにはminSDKのバージョンは23以上が必要のため、23を明記
         minSdk = 23
-        targetSdk = 33  // flutter.targetSdkVersion の代わりに実際のバージョンを記述
+        targetSdk = 33
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
 
     buildTypes {
         release {
-            signingConfig = signingConfigs.debug // 必要に応じて署名設定を変更
+            signingConfig = signingConfigs.debug
         }
     }
 }
