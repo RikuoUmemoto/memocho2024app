@@ -1,9 +1,11 @@
-# Hosei app training 2024
-2024年度法政大学アプリケーション開発演習用のリポジトリです
 # memochou
-## Getting Started
 
 メモ帳アプリです。
+2024年度法政大学アプリケーション開発演習の授業の最終課題として製作しました。
+
+# 説明
+2024ミライケータイのアプリ開発にて主にバックエンドを担当しました。
+ミライケータイで得た知識を活かす力試しとして、firebaseのfirestoreを利用してデータベースとの連携を実装しました。
 
 This project is a starting point for a Flutter application.
 
