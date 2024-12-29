@@ -1,30 +1,40 @@
+// buildscript を最初に配置
+buildscript {
+    repositories {
+        google()  // Firebase関連のライブラリが含まれるGoogleのリポジトリ
+        mavenCentral()  // 他の依存ライブラリ
+    }
+    dependencies {
+        // FirebaseのGoogleサービスプラグイン
+        classpath 'com.google.gms:google-services:4.4.2'
+        // Kotlinプラグインはここで追加しない
+    }
+}
+
+// plugins をその後に配置
+plugins {
+    id "com.android.application" version "8.1.0"
+    id "dev.flutter.flutter-gradle-plugin"  // Flutterのプラグインは最後に配置
+    id "com.google.gms.google-services" // Firebase プラグインの適用
+}
+
+// allprojects でリポジトリ設定
 allprojects {
     repositories {
         google()         // Firebase関連のライブラリが含まれるGoogleのリポジトリ
-        mavenCentral()   // 一部のFirebase依存ライブラリがここから取得されます
+        mavenCentral()   // 他の依存ライブラリ
     }
 }
 
 rootProject.buildDir = "../build"
+
+// サブプロジェクトのビルドディレクトリ設定
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
-}
-
-subprojects {
     project.evaluationDependsOn(":app")
 }
 
+// Clean タスクの定義
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
-}
-
-// Firebaseを利用するためのGoogleサービスプラグインを追加
-plugins {
-    // Google servicesプラグインを追加
-    id("com.google.gms.google-services") version "4.4.2" apply false
-}
-
-dependencies {
-    // Google Services Gradle プラグインを追加
-    classpath 'com.google.gms:google-services:4.4.2'
 }

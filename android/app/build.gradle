@@ -1,18 +1,14 @@
-apply plugin: 'com.google.gms.google-services'
-
 plugins {
     id "com.android.application"
     id "kotlin-android"
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
-    id "dev.flutter.flutter-gradle-plugin"
-
-    // Firebase プラグイン
-    id "com.google.gms.google-services" // apply false はルートレベルで使い、ここでプラグインを適用
+    id "com.google.gms.google-services" // Firebase プラグインの適用
+    id "dev.flutter.flutter-gradle-plugin" // このプラグインは最後に置く
 }
 
 android {
     namespace = "com.example.memochou"
-    compileSdk = flutter.compileSdkVersion
+    compileSdkVersion 33  // flutter.compileSdkVersion の代わりに実際のバージョンを記述
+
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
@@ -25,10 +21,10 @@ android {
     }
 
     defaultConfig {
-        // アプリケーションIDやその他の設定
         applicationId = "com.example.memochou"
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+        // authentication を利用するにはminSDKのバージョンは23以上が必要のため、23に明記
+        minSdk = 23
+        targetSdk = 33  // flutter.targetSdkVersion の代わりに実際のバージョンを記述
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
@@ -49,11 +45,8 @@ dependencies {
 
     // Firestoreライブラリ
     implementation "com.google.firebase:firebase-firestore"
-
-    // 必要な他のFirebase SDKがあればここに追加
-    implementation "com.google.firebase:firebase-auth" // Firebase認証
 }
 
 flutter {
-    source = "../.."
+    source = "../.."  // Flutterのソースコードのパス
 }
