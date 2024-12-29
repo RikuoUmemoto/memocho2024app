@@ -14,8 +14,8 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('メモ帳'),
       ),
-      body: FutureBuilder<List<Note>>(
-        future: _databaseService.getNotes(),
+      body: StreamBuilder<List<Note>>(
+        stream: _databaseService.getNotesStream(), // リアルタイムでデータを監視
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -32,11 +32,11 @@ class HomeScreen extends StatelessWidget {
                 title: Text(note.title),
                 subtitle: Text(note.content),
                 onTap: () {
+                  // 編集画面に遷移
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          NoteEditorScreen(noteId: note.id), // メモIDを渡す
+                      builder: (context) => NoteEditorScreen(noteId: note.id),
                     ),
                   );
                 },
@@ -49,7 +49,7 @@ class HomeScreen extends StatelessWidget {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => NoteEditorScreen()), // 修正
+            MaterialPageRoute(builder: (context) => NoteEditorScreen()),
           );
         },
         child: Icon(Icons.add),

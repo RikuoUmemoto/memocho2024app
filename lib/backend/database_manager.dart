@@ -16,6 +16,15 @@ class FirebaseManager {
     await _notesCollection.doc(note.id).set(note.toMap());
   }
 
+  // メモのリアルタイムデータを取得する
+  Stream<List<Note>> getNotesStream() {
+    return _notesCollection.snapshots().map((snapshot) {
+      return snapshot.docs
+          .map((doc) => Note.fromMap(doc.data() as Map<String, dynamic>))
+          .toList();
+    });
+  }
+
   // メモを取得
   Future<List<Note>> getNotes() async {
     final querySnapshot = await _notesCollection.get();
