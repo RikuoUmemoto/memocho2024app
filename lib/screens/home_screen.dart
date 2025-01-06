@@ -16,7 +16,6 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Map<String, dynamic>> _notes = [];
   List<Map<String, dynamic>> _filteredNotes = []; // 検索後のメモを格納
   bool _isLoading = false;
-  String _searchQuery = ''; // 検索クエリ
 
   @override
   void initState() {
@@ -62,7 +61,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void _searchNotes(String query) {
     setState(
       () {
-        _searchQuery = query;
         _filteredNotes = _notes.where(
           (note) {
             // タイトルや内容、タグにクエリが含まれているかをチェック
