@@ -14,7 +14,9 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final FirebaseManager _firebaseManager = FirebaseManager();
   List<Map<String, dynamic>> _notes = [];
+  List<Map<String, dynamic>> _filteredNotes = []; // 検索後のメモを格納
   bool _isLoading = false;
+  String _searchQuery = ''; // 検索クエリ
 
   @override
   void initState() {
@@ -40,6 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(
         () {
           _notes = notesMap;
+          _filteredNotes = notesMap; // 初期状態ではフィルタリングしない
         },
       );
     } catch (e) {
@@ -53,6 +56,30 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       );
     }
+  }
+
+  // 検索処理
+  void _searchNotes(String query) {
+    setState(
+      () {
+        _searchQuery = query;
+        _filteredNotes = _notes.where((note) {
+          // タイトルや内容、タグにクエリが含まれているかをチェック
+          final titleContainsQuery =
+              note['title'].toLowerCase().contains(query.toLowerCase());
+          final contentContainsQuery =
+              note['content'].toLowerCase().contains(query.toLowerCase());
+          final tagsContainQuery = (note['tags'] as List<dynamic>?)?.any(
+                  (tag) => tag
+                      .toString()
+                      .toLowerCase()
+                      .contains(query.toLowerCase())) ??
+              false;
+
+          return titleContainsQuery || contentContainsQuery || tagsContainQuery;
+        }).toList();
+      },
+    );
   }
 
   Future<void> _navigateToEditor({String? noteId}) async {
@@ -69,11 +96,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _logout() async {
     try {
       await FirebaseAuth.instance.signOut();
-      // ログアウト後の遷移など、必要な処理を追加
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Successfully logged out')),
       );
-      // ログアウト後にホーム画面をリダイレクトする場合
       Navigator.pushReplacementNamed(context, '/login'); // ログイン画面に遷移
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -93,15 +118,29 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: _logout,
           ),
         ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(56.0), // 高さ調整
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              decoration: const InputDecoration(
+                hintText: '検索...',
+                prefixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(),
+              ),
+              onChanged: _searchNotes, // 入力が変更されるたびに検索を実行
+            ),
+          ),
+        ),
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          : _notes.isEmpty
+          : _filteredNotes.isEmpty
               ? const Center(child: Text('No notes available'))
               : ListView.builder(
-                  itemCount: _notes.length,
+                  itemCount: _filteredNotes.length,
                   itemBuilder: (BuildContext context, int index) {
-                    final Map<String, dynamic> note = _notes[index];
+                    final Map<String, dynamic> note = _filteredNotes[index];
                     final List<String> tags =
                         List<String>.from(note['tags'] ?? []);
 
