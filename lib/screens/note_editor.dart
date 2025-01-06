@@ -15,7 +15,10 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
   final FirebaseManager _firebaseManager = FirebaseManager();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
+  final TextEditingController _tagController = TextEditingController();
+
   bool _isLoading = false;
+  List<String> _tags = [];
 
   @override
   void initState() {
@@ -31,10 +34,21 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
         _isLoading = true;
       },
     );
+
     try {
       final noteData = await _firebaseManager.getNoteById(widget.noteId!);
-      _titleController.text = noteData['title'] ?? '';
-      _contentController.text = noteData['content'] ?? '';
+
+      // noteDataがnullでない場合、タイトルとコンテンツを設定
+      if (noteData != null) {
+        _titleController.text = noteData.title; // nullチェックは不要
+        _contentController.text = noteData.content; // nullチェックは不要
+        _tags = List<String>.from(noteData.tags); // タグをリストに設定
+      } else {
+        // noteDataがnullの場合
+        _titleController.text = '';
+        _contentController.text = '';
+        _tags = [];
+      }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to load note: $e')),
@@ -59,17 +73,14 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
       return;
     }
 
-    setState(
-      () {
-        _isLoading = true;
-      },
-    );
+    setState(() => _isLoading = true);
 
     try {
       if (widget.noteId == null) {
-        await _firebaseManager.addNote(title, content);
+        await _firebaseManager.addNote(title, content, _tags);
       } else {
-        await _firebaseManager.updateNote(widget.noteId!, title, content);
+        await _firebaseManager.updateNote(
+            widget.noteId!, title, content, _tags);
       }
       Navigator.pop(context);
     } catch (e) {
@@ -77,12 +88,26 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
         SnackBar(content: Text('Failed to save note: $e')),
       );
     } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  void _addTag() {
+    final tag = _tagController.text.trim();
+    if (tag.isNotEmpty && !_tags.contains(tag)) {
       setState(
         () {
-          _isLoading = false;
+          _tags.add(tag);
+          _tagController.clear();
         },
       );
     }
+  }
+
+  void _removeTag(int index) {
+    setState(() {
+      _tags.removeAt(index);
+    });
   }
 
   @override
@@ -93,11 +118,13 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
         actions: [
           if (widget.noteId != null)
             IconButton(
-              icon: Icon(Icons.delete),
+              icon: const Icon(Icons.delete),
               onPressed: () async {
                 try {
                   await _firebaseManager.deleteNote(widget.noteId!);
-                  Navigator.pop(context);
+                  if (mounted) {
+                    Navigator.pop(context);
+                  }
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Failed to delete note: $e')),
@@ -108,31 +135,59 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
         ],
       ),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
                   TextField(
                     controller: _titleController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Title',
                       border: OutlineInputBorder(),
                     ),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   TextField(
                     controller: _contentController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Content',
                       border: OutlineInputBorder(),
                     ),
                     maxLines: 8,
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: _tagController,
+                          decoration: const InputDecoration(
+                            labelText: 'Tag',
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.add),
+                        onPressed: _addTag,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Wrap(
+                    spacing: 8.0,
+                    children: _tags
+                        .map((tag) => Chip(
+                              label: Text(tag),
+                              onDeleted: () => _removeTag(_tags.indexOf(tag)),
+                            ))
+                        .toList(),
+                  ),
+                  const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: _saveNote,
-                    child: Text('Save'),
+                    child: const Text('Save'),
                   ),
                 ],
               ),
