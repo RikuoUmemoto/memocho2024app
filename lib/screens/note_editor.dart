@@ -95,10 +95,12 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
   void _addTag() {
     final tag = _tagController.text.trim();
     if (tag.isNotEmpty && !_tags.contains(tag)) {
-      setState(() {
-        _tags.add(tag);
-        _tagController.clear();
-      });
+      setState(
+        () {
+          _tags.add(tag);
+          _tagController.clear();
+        },
+      );
     }
   }
 

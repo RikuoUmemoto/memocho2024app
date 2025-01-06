@@ -63,21 +63,24 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(
       () {
         _searchQuery = query;
-        _filteredNotes = _notes.where((note) {
-          // タイトルや内容、タグにクエリが含まれているかをチェック
-          final titleContainsQuery =
-              note['title'].toLowerCase().contains(query.toLowerCase());
-          final contentContainsQuery =
-              note['content'].toLowerCase().contains(query.toLowerCase());
-          final tagsContainQuery = (note['tags'] as List<dynamic>?)?.any(
-                  (tag) => tag
-                      .toString()
-                      .toLowerCase()
-                      .contains(query.toLowerCase())) ??
-              false;
-
-          return titleContainsQuery || contentContainsQuery || tagsContainQuery;
-        }).toList();
+        _filteredNotes = _notes.where(
+          (note) {
+            // タイトルや内容、タグにクエリが含まれているかをチェック
+            final titleContainsQuery =
+                note['title'].toLowerCase().contains(query.toLowerCase());
+            final contentContainsQuery =
+                note['content'].toLowerCase().contains(query.toLowerCase());
+            final tagsContainQuery = (note['tags'] as List<dynamic>?)?.any(
+                  (tag) => tag.toString().toLowerCase().contains(
+                        query.toLowerCase(),
+                      ),
+                ) ??
+                false;
+            return titleContainsQuery ||
+                contentContainsQuery ||
+                tagsContainQuery;
+          },
+        ).toList();
       },
     );
   }
