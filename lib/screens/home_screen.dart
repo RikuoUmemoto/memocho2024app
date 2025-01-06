@@ -1,8 +1,8 @@
-import '../backend/database_manager.dart';
-import 'note_editor.dart';
 import 'package:flutter/material.dart';
+import '../backend/database_manager.dart';
+import '../backend/logout.dart';
+import 'note_editor.dart';
 import '../models/note.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -13,8 +13,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final FirebaseManager _firebaseManager = FirebaseManager();
+  final AuthService _authService = AuthService(); // AuthServiceをインスタンス化
   List<Map<String, dynamic>> _notes = [];
-  List<Map<String, dynamic>> _filteredNotes = []; // 検索後のメモを格納
+  List<Map<String, dynamic>> _filteredNotes = [];
   bool _isLoading = false;
 
   @override
@@ -31,17 +32,14 @@ class _HomeScreenState extends State<HomeScreen> {
     );
 
     try {
-      // Note のリストを取得
       final List<Note> notes = await _firebaseManager.getNotes();
-
-      // List<Note> を List<Map<String, dynamic>> に変換
       final List<Map<String, dynamic>> notesMap =
           notes.map((note) => note.toMap()).toList();
 
       setState(
         () {
           _notes = notesMap;
-          _filteredNotes = notesMap; // 初期状態ではフィルタリングしない
+          _filteredNotes = notesMap;
         },
       );
     } catch (e) {
@@ -57,21 +55,20 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  // 検索処理
   void _searchNotes(String query) {
     setState(
       () {
         _filteredNotes = _notes.where(
           (note) {
-            // タイトルや内容、タグにクエリが含まれているかをチェック
             final titleContainsQuery =
                 note['title'].toLowerCase().contains(query.toLowerCase());
             final contentContainsQuery =
                 note['content'].toLowerCase().contains(query.toLowerCase());
             final tagsContainQuery = (note['tags'] as List<dynamic>?)?.any(
-                  (tag) => tag.toString().toLowerCase().contains(
-                        query.toLowerCase(),
-                      ),
+                  (tag) => tag
+                      .toString()
+                      .toLowerCase()
+                      .contains(query.toLowerCase()),
                 ) ??
                 false;
             return titleContainsQuery ||
@@ -96,14 +93,14 @@ class _HomeScreenState extends State<HomeScreen> {
   // ログアウト処理
   Future<void> _logout() async {
     try {
-      await FirebaseAuth.instance.signOut();
+      await _authService.signOut();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Successfully logged out')),
+        const SnackBar(content: Text('ログアウトしました。')),
       );
       Navigator.pushReplacementNamed(context, '/login'); // ログイン画面に遷移
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to log out: $e')),
+        SnackBar(content: Text('ログアウトに失敗しました。: $e')),
       );
     }
   }
@@ -120,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(56.0), // 高さ調整
+          preferredSize: const Size.fromHeight(56.0),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
@@ -129,7 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 prefixIcon: Icon(Icons.search),
                 border: OutlineInputBorder(),
               ),
-              onChanged: _searchNotes, // 入力が変更されるたびに検索を実行
+              onChanged: _searchNotes,
             ),
           ),
         ),
