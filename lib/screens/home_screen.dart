@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../backend/database_manager.dart';
 import '../backend/logout.dart';
 import 'note_editor.dart';
@@ -13,7 +14,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final FirebaseManager _firebaseManager = FirebaseManager();
-  final AuthService _authService = AuthService(); // AuthServiceをインスタンス化
+  final AuthService _authService = AuthService();
   List<Map<String, dynamic>> _notes = [];
   List<Map<String, dynamic>> _filteredNotes = [];
   bool _isLoading = false;
@@ -97,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('ログアウトしました。')),
       );
-      Navigator.pushReplacementNamed(context, '/login'); // ログイン画面に遷移
+      Navigator.pushReplacementNamed(context, '/login');
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('ログアウトに失敗しました。: $e')),
