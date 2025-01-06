@@ -3,7 +3,7 @@ class Note {
   final String title;
   final String content;
   final DateTime createdAt;
-  final List<String> tags; // タグを追加
+  final List<String> tags;
 
   Note({
     required this.id,
@@ -19,7 +19,7 @@ class Note {
       'title': title,
       'content': content,
       'createdAt': createdAt.toIso8601String(),
-      'tags': tags, // タグを保存
+      'tags': tags,
     };
   }
 
@@ -29,7 +29,7 @@ class Note {
       title: map['title'] ?? '',
       content: map['content'] ?? '',
       createdAt: DateTime.parse(map['createdAt']),
-      tags: List<String>.from(map['tags'] ?? []), // タグを復元
+      tags: List<String>.from(map['tags'] ?? []),
     );
   }
 }

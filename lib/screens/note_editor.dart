@@ -38,13 +38,11 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
     try {
       final noteData = await _firebaseManager.getNoteById(widget.noteId!);
 
-      // noteDataがnullでない場合、タイトルとコンテンツを設定
       if (noteData != null) {
-        _titleController.text = noteData.title; // nullチェックは不要
-        _contentController.text = noteData.content; // nullチェックは不要
-        _tags = List<String>.from(noteData.tags); // タグをリストに設定
+        _titleController.text = noteData.title;
+        _contentController.text = noteData.content;
+        _tags = List<String>.from(noteData.tags);
       } else {
-        // noteDataがnullの場合
         _titleController.text = '';
         _contentController.text = '';
         _tags = [];
