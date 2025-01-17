@@ -33,14 +33,14 @@ Firebase Firestoreを使用して、データのリアルタイム同期を実�
 # データ階層
 Firestore<br>
 ├── users (コレクション)<br>
-│   ├── {userID} (ドキュメント)
-│       ├── username: string
-│       ├── email: string
-│       ├── profileImageURL: string
-│       └── notes (サブコレクション)
-│           ├── {noteID} (ドキュメント)
-│               ├── title: string
-│               ├── content: string
-│               ├── tags: array<string>
-│               ├── createdAt: timestamp
-│               ├── updatedAt: timestamp
+│   ├── {userID} (ドキュメント)<br>
+│       ├── username: string<br>
+│       ├── email: string<br>
+│       ├── profileImageURL: string<br>
+│       └── notes (サブコレクション)<br>
+│           ├── {noteID} (ドキュメント)<br>
+│               ├── title: string<br>
+│               ├── content: string<br>
+│               ├── tags: array<string><br>
+│               ├── createdAt: timestamp<br>
+│               ├── updatedAt: timestamp<br>
