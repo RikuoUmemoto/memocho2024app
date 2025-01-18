@@ -27,5 +27,5 @@ Firebase Firestoreを使用して、データのリアルタイム同期を実�
 - **cupertino_icons**: version ^1.0.8（Cupertinoアイコン）
 
 # 動作プラットフォーム
-- **Android**: Androidで動作する前提でfirebase等の設定を行っていますが、動作確認ができていません。
+- **Android**: Androidで動作する前提でfirebase等の設定を行っていますが、端末で動作しません。
 - **Web**: ChromeやEdgeブラウザでの動作確認が完了しています。
